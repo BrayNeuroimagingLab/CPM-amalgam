@@ -5,7 +5,7 @@ A collection of Connectome Predictive Modelling edge selection methods with univ
 export PATH=/bulk/bray_bulk/software/miniconda3/bin:$PATH
 source activate CPM-amalgam
 ```
-Set the working directory where you have `FC_flat.npy`, 'control.csv`, and `target.npy`,
+Set the working directory where you have `FC_flat.npy`, `control.csv`, and `target.npy`,
 
 ```
 export wdir=/home/rylan.marianchuk/name1

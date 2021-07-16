@@ -1,7 +1,6 @@
 import sys
 import os
 import numpy as np
-import plotly
 
 # Iterations requested
 iter = sys.argv[1]

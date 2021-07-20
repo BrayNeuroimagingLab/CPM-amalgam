@@ -24,6 +24,6 @@ with open("src/1d-2d-map-" + str(parcel) + "-" + str(p) + ".npy", 'wb') as f:
     np.save(f, np.array(oneD))
 
 os.system("sbatch --output=$wdir/multivariate.out ./src/execute-multivariate.sh -export=iter,parcel,wdir")
-#os.system("sbatch --output=$wdir/rf.out ./src/execute-randomforest.sh -export=iter,parcel,wdir")
-#os.system("sbatch --output=$wdir/univariate.out ./src/execute-univariate.sh -export=iter,parcel,wdir")
+os.system("sbatch --output=$wdir/rf.out ./src/execute-randomforest.sh -export=iter,parcel,wdir")
+os.system("sbatch --output=$wdir/univariate.out ./src/execute-univariate.sh -export=iter,parcel,wdir")
 

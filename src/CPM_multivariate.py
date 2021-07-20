@@ -6,9 +6,7 @@ May 6, 2021
 import sys
 from CPM_Help import *
 import CPM_Cythoned
-from glmnet_python import cvglmnetCoef, cvglmnet
-#import cvglmnetCoef
-#import cvglmnet
+from glmnet_python.glmnet_python import cvglmnetCoef, cvglmnet
 from sklearn.linear_model import LinearRegression
 import time
 import pandas as pd

@@ -54,12 +54,7 @@ class CPM:
         """
         :param interval = (lower_thresh, upper_thresh)
         :param pselect bool whether select edges by pearson significance values (p) or r values
-        :return: iteratable of lists holding the errors for each model:
-                 e_ridge, e_EN, e_lasso, e_lsq,
-                 then the binary edge selection matrix
-                 B,
-                 then the dimensionality by bin data
-                 dims
+        :return: list of length self.iterations, holding the error (correlation of predicted vs true)
         """
         if self.n < 90:
             folds = 5
@@ -90,7 +85,7 @@ class CPM:
                 # Select by r or p
                 inds, dim = CPM_Cythoned.get_Xtr(FC_flat, self.target[train_ind],
                                                  interval[0], interval[1], pselect)
-                # Note the .sum(axis=1) ! Is notablefor univariate
+                # Note the .sum(axis=1) ! Is notable for univariate
                 X_tr = FC_flat[:, inds].sum(axis=1)
                 # Ensure we have enough edges to continue after masking
                 if dim < 1:
@@ -114,6 +109,7 @@ class CPM:
 
         return e_uni
 
+
     def iterate_r_bins(self, neg_edge, cap=0.6):
         """
         Call apply10fold() over r selections intervals
@@ -136,6 +132,8 @@ class CPM:
         results_uni = []
         for bin in bins:
             e_uni = self.apply10fold(bin, False)
+            # e_uni will be None if no edges were masked on any fold or iteration
+            # assume we don't need to continue in greater r bins after a having a None returned (break)
             if e_uni is None: break
             results_uni.append([bin, e_uni])
 

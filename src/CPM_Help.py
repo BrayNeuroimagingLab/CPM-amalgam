@@ -23,7 +23,7 @@ def partial_corr(x, y, Z):
     Compute partial corr, controlling for random variables
     :param x: Random variable 1. shape=(n,)
     :param y: Random variable 2. shape=(n,)
-    :param Z: controlling variables. shape=(n,p)
+    :param Z: controlling variables. shape=(n,p), can be None (defaults to pearson)
     :return: The partial correlation (float) of x and y
     """
     if Z is None: return np_pearson_cor(x, y)

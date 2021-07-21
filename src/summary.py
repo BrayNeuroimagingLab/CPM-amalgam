@@ -14,6 +14,12 @@ from plotly.subplots import make_subplots
 import numpy as np
 import sys
 
+# Lists to summarize best performing models
+# Holds tuples (median err, str model name)
+best_median = []
+# Holds tuples (top err, str model name)
+best_max = []
+
 def grid6_r(wdir, pos_edge, writehtml=False):
     """
     :param pos_edge:
@@ -49,6 +55,10 @@ def grid6_r(wdir, pos_edge, writehtml=False):
 
                 for i in range(len(errs)):
                     fig.append_trace(go.Violin(y=errs[i, 1], name=str(errs[i, 0])[1:-1], marker_color=marker_col), 1, x+1)
+                    identity = str(errs[i, 0]) + "-" + file.split('/')[-1]
+                    best_median.append( (np.median(errs[i, 1]), identity) )
+                    best_max.append( (np.max(errs[i, 1]), identity) )
+
         except Exception:
             pass
 
@@ -60,6 +70,10 @@ def grid6_r(wdir, pos_edge, writehtml=False):
 
                 for i in range(len(errs)):
                     fig.append_trace(go.Violin(y=errs[i, 1], name=str(errs[i, 0])[1:-1], marker_color=marker_col), 2, x+1)
+                    identity = str(errs[i, 0]) + "-" + file.split('/')[-1]
+                    best_median.append( (np.median(errs[i, 1]), identity) )
+                    best_max.append( (np.max(errs[i, 1]), identity) )
+
         except Exception:
             pass
         
@@ -102,6 +116,10 @@ def grid6_p(wdir, writehtml=False):
 
                 for i in range(len(errs)):
                     fig.append_trace(go.Violin(y=errs[i, 1], name=str(errs[i, 0])[1:-1], marker_color='orange'), 1, x+1)
+                    identity = str(errs[i, 0]) + "-" + file.split('/')[-1]
+                    best_median.append( (np.median(errs[i, 1]), identity) )
+                    best_max.append( (np.max(errs[i, 1]), identity) )
+
         except Exception:
             pass
 
@@ -113,6 +131,10 @@ def grid6_p(wdir, writehtml=False):
 
                 for i in range(len(errs)):
                     fig.append_trace(go.Violin(y=errs[i, 1], name=str(errs[i, 0])[1:-1], marker_color='orange'), 2, x+1)
+                    identity = str(errs[i, 0]) + "-" + file.split('/')[-1]
+                    best_median.append( (np.median(errs[i, 1]), identity) )
+                    best_max.append( (np.max(errs[i, 1]), identity) )
+
         except Exception:
             pass
 
@@ -137,6 +159,7 @@ def dimensionality(wdir, writehtml=False):
 
             for i in range(len(dim)):
                 fig.append_trace(go.Violin(y=dim[i, 1], name=str(dim[i, 0])[1:-1], marker_color='black'), 1, 1)
+
     except Exception:
         pass
 
@@ -169,8 +192,41 @@ def dimensionality(wdir, writehtml=False):
         fig.show()
     return
 
+
+def no_edge(wdir, writehtml=False):
+    try:
+        with open(wdir + "/results/npy/univariate-errs-none.npy", 'rb') as f:
+            noedge = np.load(f, allow_pickle=True)
+        fig = go.Figure(go.Violin(y=noedge, name="No edge selection", marker_color='grey'))
+        best_median.append((np.median(noedge), "Univariate No edge"))
+        best_max.append((np.max(noedge),  "Univariate No edge"))
+
+        fig.update_traces(marker=dict(size=3.5), points='all', jitter=0.45)
+        fig.update_layout(title="Univariate performance on all Connectome Edges",
+                          showlegend=False,
+                          yaxis_title="Correlation of Predicted vs True")
+        if writehtml:
+            fig.write_html(wdir + "/results/figures/univariate-errs-none.html")
+        else:
+            fig.show()
+    except Exception:
+        pass
+    return
+
 wdir = sys.argv[1]
 grid6_r(wdir, pos_edge=True, writehtml=True)
-#grid6_r(wdir, pos_edge=False, writehtml=True)
+grid6_r(wdir, pos_edge=False, writehtml=True)
 grid6_p(wdir, writehtml=True)
 dimensionality(wdir, writehtml=True)
+no_edge(wdir, writehtml=True)
+
+top_median = sorted(best_median, key=lambda x: x[0], reverse=True)
+top_max = sorted(best_max, key=lambda x: x[0], reverse=True)
+
+print("TOP median performing models: ")
+for i in range(3):
+    print("#" + str(i+1) + " " + str(top_median[i]))
+
+print("TOP maximum value performing models: ")
+for i in range(3):
+    print("#" + str(i+1) + " " + str(top_max[i]))

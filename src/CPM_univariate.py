@@ -176,6 +176,8 @@ except Exception:
 
 cpm = CPM(FC=np.load(wdir + "/FC_flat.npy"), Y=np.load(wdir + "/target.npy"),
           Z=Z, iterations=int(sys.argv[1]), parcel=int(sys.argv[2]), wdir=wdir)
+
+
 # Run positive r edge bins
 cpm.iterate_r_bins(neg_edge=False)
 print("Univariate finished positive r bins in " + str(time.time() - start) + " seconds.")
@@ -184,4 +186,12 @@ cpm.iterate_r_bins(neg_edge=True)
 print("Univariate finished negative r bins after " + str(time.time() - start) + " seconds.")
 # Run p bins
 cpm.iterate_p_bins()
+print("Univariate done p bins in " + str(time.time() - start) + " seconds.")
+
+# Run univariate model with no edge selection
+errs = cpm.apply10fold((-1.1, 1.1), False)
+
+with open(wdir + "/results/npy/univariate-errs-none.npy", 'wb') as f:
+    np.save(f, np.array(errs))
+
 print("Univariate done all in " + str(time.time() - start) + " seconds.")

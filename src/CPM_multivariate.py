@@ -189,6 +189,31 @@ class CPM:
         with open(wdir + "/results/npy/dimensionality-rpos=" + str(not neg_edge) + ".npy", 'wb') as f:
             np.save(f, np.array(results_dims))
 
+
+    def nobins(self):
+        """
+        Call apply10fold() over no edge selection
+        Save results into specifically named files, where summary.py uses the same names
+        DO NOT modify the file names! summary.py uses them!
+        """
+        V = self.apply10fold((-1.1, 1.1), False)
+        if V is None: return
+        e_ridge, e_EN, e_lasso, e_lsq, B, dims = V
+        #np.savetxt("../results/bioimage-edges-" + str(bin) + "-rpos=" + str(not neg_edge) + ".csv", B, delimiter=",")
+
+        # Save these as .npy files
+        with open(wdir + "/results/npy/ridge-errs-none.npy", 'wb') as f:
+            np.save(f, np.array(e_ridge))
+        with open(wdir + "/results/npy/elasticnet-errs-none.npy", 'wb') as f:
+            np.save(f, np.array(e_EN))
+        with open(wdir + "/results/npy/lasso-errs-none.npy", 'wb') as f:
+            np.save(f, np.array(e_lasso))
+        with open(wdir + "/results/npy/ols-errs-none.npy", 'wb') as f:
+            np.save(f, np.array(e_lsq))
+        with open(wdir + "/results/npy/dimensionality-none.npy", 'wb') as f:
+            np.save(f, np.array(dims))
+
+
     def iterate_p_bins(self):
         """
         Call apply10fold() over p selections intervals of 0.01 and 0.05
@@ -241,6 +266,8 @@ except Exception:
 
 cpm = CPM(FC=np.load(wdir + "/FC_flat.npy"), Y=np.load(wdir + "/target.npy"),
           Z=Z, iterations=int(sys.argv[1]), parcel=int(sys.argv[2]), wdir=wdir)
+
+"""
 # Run positive r edge bins
 cpm.iterate_r_bins(neg_edge=False)
 print("Multivariate finished positive r bins in " + str(time.time() - start) + " seconds.")
@@ -249,4 +276,9 @@ cpm.iterate_r_bins(neg_edge=True)
 print("Multivariate finished negative r bins after " + str(time.time() - start) + " seconds.")
 # Run p bins
 cpm.iterate_p_bins()
+"""
+
+# Run univariate model with no edge selection
+errs = cpm.nobins()
+
 print("Multivariate done all in " + str(time.time() - start) + " seconds.")

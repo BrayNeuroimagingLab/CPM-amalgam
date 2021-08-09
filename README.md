@@ -3,8 +3,17 @@ A collection of Connectome Predictive Modelling edge selection methods with univ
 
 *Author: Rylan Marianchuk*
 *July 2021*
+Packages required:
+```
+glmnet-python
+cython
+pandas
+plotly
+scikit-learn
+scipy
+```
 
-To run an amalgam of models on ARC, activate the conda environment within `bray_bulk`:
+To run an amalgam of models on ARC (High Performance Computing cluster), activate the conda environment within `bray_bulk`:
 ```
 export PATH=/bulk/bray_bulk/software/miniconda3/bin:$PATH
 source activate CPM-amalgam
@@ -21,10 +30,12 @@ Set the parcellation dimension of the FC data,
 ```
 export parcel=268
 ```
-Call the main sbatch
+Then naviage to `/bulk/bray_bulk/CPM-amalgam`, then call the main sbatch on the shell script,
 ```
 sbatch --output=$wdir/output.out run_all.sh -export=iter,parcel,wdir
 ```
+Wait for all jobs to finish, may take up to 48 hours depending on data size.
+
 To run the figure generation, set environment variables again, since a new session likely wiped them,
 ```
 export PATH=/bulk/bray_bulk/software/miniconda3/bin:$PATH

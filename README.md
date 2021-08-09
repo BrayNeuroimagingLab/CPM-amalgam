@@ -2,8 +2,10 @@
 A collection of Connectome Predictive Modelling edge selection methods with univariate, multivariate, and random forest **regression** models
 
 *Author: Rylan Marianchuk*
+
 *July 2021*
-Packages required:
+
+Python packages required:
 ```
 glmnet-python
 cython
@@ -11,6 +13,7 @@ pandas
 plotly
 scikit-learn
 scipy
+numpy
 ```
 
 To run an amalgam of models on ARC (High Performance Computing cluster), activate the conda environment within `bray_bulk`:

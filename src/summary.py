@@ -195,21 +195,29 @@ def dimensionality(wdir, writehtml=False):
 
 def no_edge(wdir, writehtml=False):
     try:
-        with open(wdir + "/results/npy/univariate-errs-none.npy", 'rb') as f:
-            noedge = np.load(f, allow_pickle=True)
-        fig = go.Figure(go.Violin(y=noedge, name="No edge selection", marker_color='grey'))
-        best_median.append((np.median(noedge), "Univariate No edge"))
-        best_max.append((np.max(noedge),  "Univariate No edge"))
+        fig = go.Figure()
+
+        for file in (wdir + "/results/npy/univariate-errs-none.npy", wdir + "/results/npy/ols-errs-none.npy",
+                 wdir + "/results/npy/ridge-errs-none.npy", wdir + "/results/npy/lasso-errs-none.npy",
+                     wdir + "/results/npy/elasticnet-errs-none.npy"):
+
+            with open(file, 'rb') as f:
+                noedge = np.load(f, allow_pickle=True)
+                identity = file.split('/')[-1].split("-")[0]
+                best_median.append((np.median(noedge), identity + "unthresholded"))
+                best_max.append((np.max(noedge), identity + "unthresholded"))
+                fig.add_trace(go.Violin(y=noedge, name=identity, marker_color='grey'))
 
         fig.update_traces(marker=dict(size=3.5), points='all', jitter=0.45)
-        fig.update_layout(title="Univariate performance on all Connectome Edges",
+        fig.update_layout(title="Regression performance on all Connectome Edges",
                           showlegend=False,
                           yaxis_title="Correlation of Predicted vs True")
         if writehtml:
-            fig.write_html(wdir + "/results/figures/univariate-errs-none.html")
+            fig.write_html(wdir + "/results/figures/unthresholded-errs.html")
         else:
             fig.show()
     except Exception:
+        print("** Exception caught in no_edge(), please inspect! **")
         pass
     return
 

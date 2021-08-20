@@ -18,7 +18,7 @@ numpy
 
 To run an amalgam of models on ARC (High Performance Computing cluster), activate the conda environment within `bray_bulk`:
 ```
-export PATH=/bulk/bray_bulk/software/miniconda3/bin:$PATH
+export PATH=/bulk/bray_bulk/software/miniconda3/envs/CPM-amalgam:$PATH
 source activate CPM-amalgam
 ```
 Set the working directory outside of `bray_bulk` where you have `FC_flat.npy`, `control.csv`, and `target.npy`,
@@ -41,7 +41,7 @@ Wait for all jobs to finish, may take up to 48 hours depending on data size.
 
 To run the figure generation, set environment variables again, since a new session likely wiped them,
 ```
-export PATH=/bulk/bray_bulk/software/miniconda3/bin:$PATH
+export PATH=/bulk/bray_bulk/software/miniconda3/envs/CPM-amalgam:$PATH
 source activate CPM-amalgam
 export wdir=/home/rylan.marianchuk/name1
 ```
